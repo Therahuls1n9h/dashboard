@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useQuery, useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import {
   GET_PRODUCT,
   UPDATE_PRODUCT,
@@ -15,11 +15,10 @@ export default function HUDuzenle() {
   const { id } = useParams();
 
   // Get product from server
-  const {
-    loading: queryLoading,
-    error: queryError,
-    data: queryData
-  } = useQuery(GET_PRODUCT, {
+  const [
+    getProduct,
+    { loading: queryLoading, error: queryError, data: queryData }
+  ] = useLazyQuery(GET_PRODUCT, {
     variables: { id }
   });
 
@@ -47,11 +46,22 @@ export default function HUDuzenle() {
     if (queryData) setData({ ...queryData.product });
   }, [queryData]);
   useEffect(() => {
-    if (createData) setData({ ...createData.createProduct.product });
+    if (createData) {
+      console.log(createData);
+      setData({ ...createData.createProduct.product });
+    }
   }, [createData]);
   useEffect(() => {
     if (updateData) setData({ ...updateData.updateProduct.product });
   }, [updateData]);
+
+  useEffect(() => {
+    if (id) getProduct();
+  }, []);
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   if (queryLoading || createLoading || updateLoading) return <p>Loading...</p>;
   if (queryError || createError || updateError) return <p>Error :(</p>;
