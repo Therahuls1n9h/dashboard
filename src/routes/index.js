@@ -18,6 +18,9 @@ const HUEkleDuzenle = lazy(() =>
 const HUDuzenle = lazy(() =>
   import("../pages/stok/hizmet_ve_urunler/HUDuzenle")
 );
+const HUEkleDuzenleNew = lazy(() =>
+  import("../pages/stok/hizmet_ve_urunler/HUEkleDuzenleNew")
+);
 
 /**
  * ⚠ These are internal routes!
@@ -76,11 +79,11 @@ const routes = [
   },
   {
     path: "/hizmet_ve_urunler/ekle",
-    component: HUEkleDuzenle
+    component: HUEkleDuzenleNew
   },
   {
     path: "/hizmet_ve_urunler/:id/duzenle",
-    component: HUDuzenle
+    component: HUEkleDuzenleNew
   }
 ];
 
