@@ -14,17 +14,17 @@ export default function HUEkleDuzenleNew() {
   const { id } = useParams();
 
   // Get product from server
-  const [getProduct, { queryLoading, queryError, queryData }] = useLazyQuery(
-    GET_PRODUCT,
-    {
-      variables: { id }
-    }
-  );
+  const [
+    getProduct,
+    { loading: queryLoading, error: queryError, data: queryData }
+  ] = useLazyQuery(GET_PRODUCT, {
+    variables: { id }
+  });
 
   //
   const [
     updateProduct,
-    { mutationLoading, mutationError, mutationData }
+    { loading: mutationLoading, error: mutationError, data: mutationData }
   ] = useMutation(UPDATE_PRODUCT);
 
   // Product form
@@ -45,9 +45,9 @@ export default function HUEkleDuzenleNew() {
   }, []);
 
   useEffect(() => {
-    if (!queryLoading && !queryError) {
-      console.log(queryData);
-      //setDefaultValues({ ...queryData.product });
+    if (queryData && !queryLoading && !queryError) {
+      console.log(queryData.product);
+      setDefaultValues({ ...queryData.product });
     }
   }, [queryData]);
 

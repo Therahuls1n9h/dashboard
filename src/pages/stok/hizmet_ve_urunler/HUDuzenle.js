@@ -1,42 +1,60 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery, useMutation } from "@apollo/client";
-import { GET_PRODUCT, UPDATE_PRODUCT } from "../../../queries/ProductQueries";
+import {
+  GET_PRODUCT,
+  UPDATE_PRODUCT,
+  CREATE_PRODUCT
+} from "../../../queries/ProductQueries";
 import HUEkleDuzenleForm from "./HUEkleDuzenleForm";
 
 // https://stackoverflow.com/a/61322784
 // https://www.digitalocean.com/community/tutorials/how-to-call-web-apis-with-the-useeffect-hook-in-react
 export default function HUDuzenle() {
   // Get id parameter from URI
-  let { id } = useParams();
-
-  console.log("ID from URI : " + id);
+  const { id } = useParams();
 
   // Get product from server
-  const { queryLoading, queryError, data } = useQuery(GET_PRODUCT, {
+  const {
+    loading: queryLoading,
+    error: queryError,
+    data: queryData
+  } = useQuery(GET_PRODUCT, {
     variables: { id }
   });
 
   const [
     updateProduct,
-    { mutationLoading, mutationError, mutationData }
+    { loading: updateLoading, error: updateError, data: updateData }
   ] = useMutation(UPDATE_PRODUCT);
+
+  const [
+    createProduct,
+    { loading: createLoading, error: createError, data: createData }
+  ] = useMutation(CREATE_PRODUCT);
 
   // TODO: On update function send only dirty fields to api server
   const onSubmit = (formData) => {
-    const updateInput = {
-      input: { id: id, name: formData.name, sku: formData.sku }
-    };
-
-    updateProduct({ variables: { ...updateInput } });
+    if (id) {
+      updateProduct({ variables: { input: { id: id, ...formData } } });
+    } else {
+      createProduct({ variables: { input: { ...formData } } });
+    }
   };
 
-  if (queryLoading || mutationLoading) return <p>Loading...</p>;
-  if (queryError || mutationError) return <p>Error :(</p>;
+  const [data, setData] = useState({});
+  useEffect(() => {
+    if (queryData) setData({ ...queryData.product });
+  }, [queryData]);
+  useEffect(() => {
+    if (createData) setData({ ...createData.createProduct.product });
+  }, [createData]);
+  useEffect(() => {
+    if (updateData) setData({ ...updateData.updateProduct.product });
+  }, [updateData]);
 
-  console.log(data);
+  if (queryLoading || createLoading || updateLoading) return <p>Loading...</p>;
+  if (queryError || createError || updateError) return <p>Error :(</p>;
 
-  return (
-    <HUEkleDuzenleForm formDefaultValues={data.product} onSubmit={onSubmit} />
-  );
+  return <HUEkleDuzenleForm formDefaultValues={data} onSubmit={onSubmit} />;
 }

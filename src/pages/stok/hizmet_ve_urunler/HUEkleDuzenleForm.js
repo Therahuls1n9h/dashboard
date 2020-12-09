@@ -28,8 +28,7 @@ export default function HUEkleDuzenleForm({ formDefaultValues, onSubmit }) {
                 bgColorClass="bg-orange-100"
               />
               <Input
-                defa
-                name="product_name"
+                name="name"
                 className="my-auto ml-3 text-xl font-medium text-gray-700"
                 placeholder="Ürün Adı"
                 ref={register}
@@ -60,7 +59,7 @@ export default function HUEkleDuzenleForm({ formDefaultValues, onSubmit }) {
           <div className="my-1 flex flex-col">
             <Label>
               <span>SKU</span>
-              <Input name="product_sku" className="mt-1" ref={register} />
+              <Input name="sku" className="mt-1" ref={register} />
             </Label>
           </div>
         </form>

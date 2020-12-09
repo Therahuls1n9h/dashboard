@@ -79,11 +79,11 @@ const routes = [
   },
   {
     path: "/hizmet_ve_urunler/ekle",
-    component: HUEkleDuzenleNew
+    component: HUDuzenle
   },
   {
     path: "/hizmet_ve_urunler/:id/duzenle",
-    component: HUEkleDuzenleNew
+    component: HUDuzenle
   }
 ];
 
