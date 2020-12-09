@@ -9,11 +9,13 @@ import { Input, Label, Button } from "@windmill/react-ui";
 import { gql, useMutation, useQuery } from "@apollo/client";
 
 const ADD_PRODUCT_QUERY = gql`
-  mutation addProduct($product_name: String!, $product_sku: String) {
-    addProduct(name: $product_name, stockCode: $product_sku) {
-      id
-      name
-      stockCode
+  mutation addProduct($input: CreateProductInput!) {
+    createProduct(input: $input) {
+      product {
+        id
+        name
+        sku
+      }
     }
   }
 `;
@@ -47,6 +49,9 @@ function HUEkleDuzenle() {
 
   const onSubmit = (data) => {
     console.log(data);
+
+    const input = { input: { name: data.product_name, sku: data.product_sku } };
+    addProduct({ variables: { ...input } });
   };
 
   if (q_loading || m_loading) return <p>Loading...</p>;
@@ -68,11 +73,10 @@ function HUEkleDuzenle() {
                 bgColorClass="bg-orange-100"
               />
               <Input
-                defaultValue={defaultValues.firstName}
                 name="product_name"
                 className="my-auto ml-3 text-xl font-medium text-gray-700"
                 placeholder="Ürün Adı"
-                onChange={(event) => setProductName(event.target.value)}
+                ref={register}
               />
             </div>
             <div className="flex flex-col md:flex-row">
@@ -87,7 +91,7 @@ function HUEkleDuzenle() {
                 Vazgeç
               </Button>
               <Button
-                onClick={handleAddProduct}
+                onClick={handleSubmit(onSubmit)}
                 block
                 className="ml-0 md:ml-4 mt-4 md:mt-0"
                 iconLeft={EditIcon}
@@ -100,12 +104,7 @@ function HUEkleDuzenle() {
           <div className="my-1 flex flex-col">
             <Label>
               <span>SKU</span>
-              <Input
-                {...product_sku}
-                name="product_sku"
-                className="mt-1"
-                onChange={(event) => setProductSKU(event.target.value)}
-              />
+              <Input name="product_sku" className="mt-1" ref={register} />
             </Label>
           </div>
         </form>
