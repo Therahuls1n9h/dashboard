@@ -1,42 +1,21 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 import RoundIcon from "../../../components/RoundIcon";
 import { CakeIcon, EditIcon, XIcon } from "../../../icons";
 import PageTitle from "../../../components/Typography/PageTitle";
 import { Input, Label, Button } from "@windmill/react-ui";
-import { useMutation, useQuery } from "@apollo/client";
 
-import { GET_PRODUCT, CREATE_PRODUCT } from "../../../queries/ProductQueries";
-
-function HUEkleDuzenle() {
-  // Get id parameter from URI
-  let { id } = useParams();
-
-  // Apollo Example
-  const { q_loading, q_error, q_data } = useQuery(GET_PRODUCT, {
-    variables: { id }
+export default function HUEkleDuzenleForm({ formDefaultValues, onSubmit }) {
+  const { register, handleSubmit } = useForm({
+    defaultValues: formDefaultValues
   });
-
-  const [addProduct, { m_loading, m_error }] = useMutation(CREATE_PRODUCT);
-
-  const { register, handleSubmit } = useForm();
-
-  const onSubmit = (data) => {
-    console.log(data);
-
-    const input = { input: { name: data.product_name, sku: data.product_sku } };
-    addProduct({ variables: { ...input } });
-  };
-
-  if (q_loading || m_loading) return <p>Loading...</p>;
-  if (q_error || m_error) return <p>Error :(</p>;
 
   return (
     <>
       <PageTitle>
-        Hizmet ve Ürünler {">"} {id ? "Düzenle" : "Ekle"}
+        Hizmet ve Ürünler {">"} {formDefaultValues.id ? "Düzenle" : "Ekle"}
       </PageTitle>
 
       <div className="px-4 py-3 mb-8 bg-white rounded-lg shadow-md">
@@ -49,6 +28,7 @@ function HUEkleDuzenle() {
                 bgColorClass="bg-orange-100"
               />
               <Input
+                defa
                 name="product_name"
                 className="my-auto ml-3 text-xl font-medium text-gray-700"
                 placeholder="Ürün Adı"
@@ -88,5 +68,3 @@ function HUEkleDuzenle() {
     </>
   );
 }
-
-export default HUEkleDuzenle;
