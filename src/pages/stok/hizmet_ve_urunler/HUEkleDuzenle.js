@@ -1,92 +1,81 @@
-import React from "react";
-import { Link, useParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import React, { useEffect, useState } from "react";
+import { useParams, useHistory } from "react-router-dom";
+import { useLazyQuery, useMutation } from "@apollo/client";
+import {
+  GET_PRODUCT,
+  UPDATE_PRODUCT,
+  CREATE_PRODUCT
+} from "../../../queries/ProductQueries";
+import HUForm from "./HUForm";
 
-import RoundIcon from "../../../components/RoundIcon";
-import { CakeIcon, EditIcon, XIcon } from "../../../icons";
-import PageTitle from "../../../components/Typography/PageTitle";
-import { Input, Label, Button } from "@windmill/react-ui";
-import { useMutation, useQuery } from "@apollo/client";
-
-import { GET_PRODUCT, CREATE_PRODUCT } from "../../../queries/ProductQueries";
-
-function HUEkleDuzenle() {
+// https://stackoverflow.com/a/61322784
+// https://www.digitalocean.com/community/tutorials/how-to-call-web-apis-with-the-useeffect-hook-in-react
+export default function HUEkleDuzenle() {
   // Get id parameter from URI
-  let { id } = useParams();
+  const { id } = useParams();
 
-  // Apollo Example
-  const { q_loading, q_error, q_data } = useQuery(GET_PRODUCT, {
-    variables: { id }
-  });
+  const history = useHistory();
 
-  const [addProduct, { m_loading, m_error }] = useMutation(CREATE_PRODUCT);
+  // Get product from server
+  const [
+    getProduct,
+    { loading: queryLoading, error: queryError, data: queryData }
+  ] = useLazyQuery(GET_PRODUCT);
 
-  const { register, handleSubmit } = useForm();
+  // Update product
+  const [
+    updateProduct,
+    { loading: updateLoading, error: updateError, data: updateData }
+  ] = useMutation(UPDATE_PRODUCT);
 
-  const onSubmit = (data) => {
-    console.log(data);
+  // Create new product
+  const [
+    createProduct,
+    { loading: createLoading, error: createError, data: createData }
+  ] = useMutation(CREATE_PRODUCT);
 
-    const input = { input: { name: data.product_name, sku: data.product_sku } };
-    addProduct({ variables: { ...input } });
+  // TODO: On update function send only dirty fields to api server
+  const onSubmit = (formData) => {
+    if (id) {
+      updateProduct({ variables: { input: { id: id, ...formData } } });
+    } else {
+      createProduct({ variables: { input: { ...formData } } });
+    }
   };
 
-  if (q_loading || m_loading) return <p>Loading...</p>;
-  if (q_error || m_error) return <p>Error :(</p>;
+  const [data, setData] = useState({});
+  useEffect(() => {
+    if (queryData) {
+      setData({ ...queryData.product });
+    }
+  }, [queryData]);
+  // Redirect to edit page. Search ApolloClient API, there should be better prop for this
+  useEffect(() => {
+    if (createData) {
+      history.push(
+        `/app/hizmet_ve_urunler/${createData.createProduct.product.id}/duzenle`
+      );
+      //setData({ ...createData.createProduct.product });
+    }
+  }, [createData]);
+  useEffect(() => {
+    if (updateData) {
+      setData({ ...updateData.updateProduct.product });
+    }
+  }, [updateData]);
 
-  return (
-    <>
-      <PageTitle>
-        Hizmet ve Ürünler {">"} {id ? "Düzenle" : "Ekle"}
-      </PageTitle>
+  useEffect(() => {
+    if (!(createLoading || updateLoading)) {
+      if (id && Object.keys(data).length === 0) {
+        getProduct({
+          variables: { id }
+        });
+      }
+    }
+  }, []);
 
-      <div className="px-4 py-3 mb-8 bg-white rounded-lg shadow-md">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex flex-col flex-wrap md:flex-row md:items-center md:justify-between">
-            <div className="flex-1 inline-flex min-w-0">
-              <RoundIcon
-                icon={CakeIcon}
-                iconColorClass="text-orange-500"
-                bgColorClass="bg-orange-100"
-              />
-              <Input
-                name="product_name"
-                className="my-auto ml-3 text-xl font-medium text-gray-700"
-                placeholder="Ürün Adı"
-                ref={register}
-              />
-            </div>
-            <div className="flex flex-col md:flex-row">
-              <Button
-                block
-                layout="outline"
-                className="ml-0 md:ml-4 mt-4 md:mt-0"
-                iconLeft={XIcon}
-                tag={Link}
-                to="/app/hizmet_ve_urunler/ekle_duzenle"
-              >
-                Vazgeç
-              </Button>
-              <Button
-                onClick={handleSubmit(onSubmit)}
-                block
-                className="ml-0 md:ml-4 mt-4 md:mt-0"
-                iconLeft={EditIcon}
-              >
-                Kaydet
-              </Button>
-            </div>
-          </div>
-          <hr className="my-3" />
-          <div className="my-1 flex flex-col">
-            <Label>
-              <span>SKU</span>
-              <Input name="product_sku" className="mt-1" ref={register} />
-            </Label>
-          </div>
-        </form>
-      </div>
-    </>
-  );
+  //if (queryLoading || createLoading || updateLoading) return <p>Loading...</p>;
+  //if (queryError || createError || updateError) return <p>Error :(</p>;
+
+  return <HUForm formDefaultValues={data} onSubmit={onSubmit} />;
 }
-
-export default HUEkleDuzenle;

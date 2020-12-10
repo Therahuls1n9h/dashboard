@@ -7,7 +7,7 @@ import { CakeIcon, EditIcon, XIcon } from "../../../icons";
 import PageTitle from "../../../components/Typography/PageTitle";
 import { Input, Label, Button } from "@windmill/react-ui";
 
-export default function HUEkleDuzenleForm({ formDefaultValues, onSubmit }) {
+export default function HUForm({ formDefaultValues, onSubmit }) {
   const { register, handleSubmit } = useForm();
 
   return (
@@ -40,7 +40,13 @@ export default function HUEkleDuzenleForm({ formDefaultValues, onSubmit }) {
                 className="ml-0 md:ml-4 mt-4 md:mt-0"
                 iconLeft={XIcon}
                 tag={Link}
-                to="/app/hizmet_ve_urunler/ekle_duzenle"
+                to={
+                  formDefaultValues.id
+                    ? "/app/hizmet_ve_urunler/" +
+                      formDefaultValues.id +
+                      "/detay"
+                    : "/app/hizmet_ve_urunler"
+                }
               >
                 Vazgeç
               </Button>

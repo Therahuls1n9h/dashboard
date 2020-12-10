@@ -30,6 +30,7 @@
     "react-dom": "^16.13.1",
     "react-focus-lock": "2.4.0",
     "react-hook-form": "6.12.2",
+    "react-intersection-observer": "8.31.0",
     "react-router-dom": "5.2.0",
     "react-scripts": "3.4.1",
     "react-transition-group": "4.4.1"
