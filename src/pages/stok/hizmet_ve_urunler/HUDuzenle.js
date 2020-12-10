@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import {
   GET_PRODUCT,
@@ -14,19 +14,21 @@ export default function HUDuzenle() {
   // Get id parameter from URI
   const { id } = useParams();
 
+  const history = useHistory();
+
   // Get product from server
   const [
     getProduct,
     { loading: queryLoading, error: queryError, data: queryData }
-  ] = useLazyQuery(GET_PRODUCT, {
-    variables: { id }
-  });
+  ] = useLazyQuery(GET_PRODUCT);
 
+  // Update product
   const [
     updateProduct,
     { loading: updateLoading, error: updateError, data: updateData }
   ] = useMutation(UPDATE_PRODUCT);
 
+  // Create new product
   const [
     createProduct,
     { loading: createLoading, error: createError, data: createData }
@@ -43,28 +45,37 @@ export default function HUDuzenle() {
 
   const [data, setData] = useState({});
   useEffect(() => {
-    if (queryData) setData({ ...queryData.product });
+    if (queryData) {
+      setData({ ...queryData.product });
+    }
   }, [queryData]);
+  // Redirect to edit page. Search ApolloClient API, there should be better prop for this
   useEffect(() => {
     if (createData) {
-      console.log(createData);
-      setData({ ...createData.createProduct.product });
+      history.push(
+        `/app/hizmet_ve_urunler/${createData.createProduct.product.id}/duzenle`
+      );
+      //setData({ ...createData.createProduct.product });
     }
   }, [createData]);
   useEffect(() => {
-    if (updateData) setData({ ...updateData.updateProduct.product });
+    if (updateData) {
+      setData({ ...updateData.updateProduct.product });
+    }
   }, [updateData]);
 
   useEffect(() => {
-    if (id) getProduct();
+    if (!(createLoading || updateLoading)) {
+      if (id && Object.keys(data).length === 0) {
+        getProduct({
+          variables: { id }
+        });
+      }
+    }
   }, []);
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
-  if (queryLoading || createLoading || updateLoading) return <p>Loading...</p>;
-  if (queryError || createError || updateError) return <p>Error :(</p>;
+  //if (queryLoading || createLoading || updateLoading) return <p>Loading...</p>;
+  //if (queryError || createError || updateError) return <p>Error :(</p>;
 
   return <HUEkleDuzenleForm formDefaultValues={data} onSubmit={onSubmit} />;
 }

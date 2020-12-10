@@ -8,9 +8,7 @@ import PageTitle from "../../../components/Typography/PageTitle";
 import { Input, Label, Button } from "@windmill/react-ui";
 
 export default function HUEkleDuzenleForm({ formDefaultValues, onSubmit }) {
-  const { register, handleSubmit } = useForm({
-    defaultValues: formDefaultValues
-  });
+  const { register, handleSubmit } = useForm();
 
   return (
     <>
@@ -32,6 +30,7 @@ export default function HUEkleDuzenleForm({ formDefaultValues, onSubmit }) {
                 className="my-auto ml-3 text-xl font-medium text-gray-700"
                 placeholder="Ürün Adı"
                 ref={register}
+                defaultValue={formDefaultValues.name}
               />
             </div>
             <div className="flex flex-col md:flex-row">
@@ -59,7 +58,12 @@ export default function HUEkleDuzenleForm({ formDefaultValues, onSubmit }) {
           <div className="my-1 flex flex-col">
             <Label>
               <span>SKU</span>
-              <Input name="sku" className="mt-1" ref={register} />
+              <Input
+                name="sku"
+                className="mt-1"
+                ref={register}
+                defaultValue={formDefaultValues.sku}
+              />
             </Label>
           </div>
         </form>
