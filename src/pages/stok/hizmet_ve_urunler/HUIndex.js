@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { useInView } from "react-intersection-observer";
+import { GET_PRODUCTS } from "../../../queries/ProductQueries";
 
 import PageTitle from "../../../components/Typography/PageTitle";
 import {
@@ -11,49 +12,49 @@ import {
   TableBody,
   TableRow,
   TableContainer,
+  TableFooter,
   Button,
   Label
 } from "@windmill/react-ui";
 import { CakeIcon, EditIcon, TrashIcon } from "../../../icons";
 
 import RoundIcon from "../../../components/RoundIcon";
-
-const PRODUCTS = gql`
-  query GET_PRODUCTS {
-    products {
-      edges {
-        cursor
-        node {
-          id
-          name
-          sku
-        }
-      }
-      pageInfo {
-        hasPreviousPage
-        hasNextPage
-        startCursor
-        endCursor
-      }
-    }
-  }
-`;
+import InfiniteScroll from "./InfiniteScroll";
 
 function HUIndex() {
-  const { ref, inView, entry } = useInView({
-    /* Optional options */
-    threshold: 0
+  const {
+    loading: queryLoading,
+    error: queryError,
+    data: queryData,
+    fetchMore: queryFetchMore
+  } = useQuery(GET_PRODUCTS);
+
+  const { ref, inView } = useInView({
+    threshold: 0,
+    trackVisibility: true,
+    delay: 100
   });
 
   useEffect(() => {
-    console.log("InView : " + inView);
+    console.log(inView);
+    if (inView) {
+      if (
+        queryData &&
+        !queryLoading &&
+        queryData.products.pageInfo.hasNextPage
+      ) {
+        queryFetchMore({
+          variables: {
+            after: queryData.products.pageInfo.endCursor,
+            first: 5
+          }
+        });
+      }
+    }
   }, [inView]);
 
-  // Apollo Example
-  const { loading, error, data } = useQuery(PRODUCTS);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
+  if (queryLoading) return <p>Loading...</p>;
+  if (queryError) return <p>Error :(</p>;
 
   return (
     <>
@@ -91,7 +92,7 @@ function HUIndex() {
             </tr>
           </TableHeader>
           <TableBody>
-            {data.products.edges.map(({ cursor, node }) => (
+            {queryData?.products?.edges?.map(({ cursor, node }) => (
               <TableRow key={node.id}>
                 <TableCell>
                   <div className="flex items-center text-sm">
@@ -125,16 +126,12 @@ function HUIndex() {
                 </TableCell>
               </TableRow>
             ))}
-            <TableRow>
-              <TableCell></TableCell>
-            </TableRow>
           </TableBody>
+          <TableFooter>
+            <InfiniteScroll />
+          </TableFooter>
         </Table>
       </TableContainer>
-
-      <div className="loading" ref={ref}>
-        <h2>Load More !</h2>
-      </div>
     </>
   );
 }

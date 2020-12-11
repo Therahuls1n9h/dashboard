@@ -12,6 +12,8 @@ import {
   ApolloProvider,
   HttpLink
 } from "@apollo/client";
+import { relayStylePagination } from "@apollo/client/utilities";
+
 // if (process.env.NODE_ENV !== 'production') {
 //   const axe = require('react-axe')
 //   axe(React, ReactDOM, 1000)
@@ -20,15 +22,23 @@ const link = new HttpLink({
   uri: "https://sup-boot.herokuapp.com/graphql"
 });
 
-const cache = new InMemoryCache();
+const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        products: relayStylePagination()
+      }
+    }
+  }
+});
 
 const defaultOptions = {
   watchQuery: {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: "network-first",
     errorPolicy: "all"
   },
   query: {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: "network-first",
     errorPolicy: "all"
   },
   mutate: {
@@ -46,7 +56,7 @@ ReactDOM.render(
   <ApolloProvider client={client}>
     <SidebarProvider>
       <Suspense fallback={<ThemedSuspense />}>
-        <Windmill usePreferences>
+        <Windmill>
           <App />
         </Windmill>
       </Suspense>
