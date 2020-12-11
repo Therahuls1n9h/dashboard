@@ -8,7 +8,9 @@ import PageTitle from "../../../components/Typography/PageTitle";
 import { Input, Label, Button } from "@windmill/react-ui";
 
 export default function HUForm({ formDefaultValues, onSubmit }) {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState } = useForm({
+    defaultValues: formDefaultValues
+  });
 
   return (
     <>
@@ -51,6 +53,7 @@ export default function HUForm({ formDefaultValues, onSubmit }) {
                 Vazgeç
               </Button>
               <Button
+                disabled={!formState.isDirty}
                 onClick={handleSubmit(onSubmit)}
                 block
                 className="ml-0 md:ml-4 mt-4 md:mt-0"
