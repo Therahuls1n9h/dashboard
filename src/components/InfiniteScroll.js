@@ -11,7 +11,6 @@ export default function InfiniteScroll({ hasMore, loadMore, footerText }) {
   });
 
   useEffect(() => {
-    console.log(inView);
     if (inView && typeof loadMore === "function") {
       loadMore();
     }

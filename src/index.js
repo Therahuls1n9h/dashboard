@@ -34,11 +34,11 @@ const cache = new InMemoryCache({
 
 const defaultOptions = {
   watchQuery: {
-    fetchPolicy: "network-first",
+    fetchPolicy: "network-only",
     errorPolicy: "all"
   },
   query: {
-    fetchPolicy: "network-first",
+    fetchPolicy: "network-only",
     errorPolicy: "all"
   },
   mutate: {
