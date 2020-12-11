@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
+
 import { useQuery } from "@apollo/client";
-import { useInView } from "react-intersection-observer";
 import { GET_PRODUCTS } from "../../../queries/ProductQueries";
 
 import PageTitle from "../../../components/Typography/PageTitle";
@@ -19,7 +19,7 @@ import {
 import { CakeIcon, EditIcon, TrashIcon } from "../../../icons";
 
 import RoundIcon from "../../../components/RoundIcon";
-import InfiniteScroll from "./InfiniteScroll";
+import InfiniteScroll from "../../../components/InfiniteScroll";
 
 function HUIndex() {
   const {
@@ -29,29 +29,16 @@ function HUIndex() {
     fetchMore: queryFetchMore
   } = useQuery(GET_PRODUCTS);
 
-  const { ref, inView } = useInView({
-    threshold: 0,
-    trackVisibility: true,
-    delay: 100
-  });
-
-  useEffect(() => {
-    console.log(inView);
-    if (inView) {
-      if (
-        queryData &&
-        !queryLoading &&
-        queryData.products.pageInfo.hasNextPage
-      ) {
-        queryFetchMore({
-          variables: {
-            after: queryData.products.pageInfo.endCursor,
-            first: 5
-          }
-        });
-      }
+  const onLoadMore = () => {
+    if (queryData && !queryLoading && queryData.products.pageInfo.hasNextPage) {
+      queryFetchMore({
+        variables: {
+          after: queryData.products.pageInfo.endCursor,
+          first: 5
+        }
+      });
     }
-  }, [inView]);
+  };
 
   if (queryLoading) return <p>Loading...</p>;
   if (queryError) return <p>Error :(</p>;
@@ -127,10 +114,13 @@ function HUIndex() {
               </TableRow>
             ))}
           </TableBody>
-          <TableFooter>
-            <InfiniteScroll />
-          </TableFooter>
         </Table>
+        <TableFooter>
+          <InfiniteScroll
+            loadMore={onLoadMore}
+            hasMore={queryData?.products?.pageInfo?.hasNextPage}
+          />
+        </TableFooter>
       </TableContainer>
     </>
   );
