@@ -1,7 +1,12 @@
-*1* Ürün kaydedildiğinde veya düzenlendiğinde yapılan işlemin başarılı olup olmadığı 
+**1* Ürün kaydedildiğinde veya düzenlendiğinde yapılan işlemin başarılı olup olmadığı 
 Toast Notification olarak kullanıcıya gösterilecek.
 https://reactjsexample.com/tag/notifications/
 
-*2* Toast Notification eklendikten sonra (*1* nolu iş) ürün ekleme veya düzenleme yapıldıktan sonra 
-başka sayfaya yönlendirme yaılmayacak aynı ekranda kalacak. Kullanıcı isterse başka ekrana gidebilir 
+**2* Toast Notification eklendikten sonra (*1* nolu iş) ürün ekleme veya düzenleme yapıldıktan sonra 
+başka sayfaya yönlendirme yapılmayacak aynı ekranda kalacak. Kullanıcı isterse başka ekrana gidebilir 
 veya vazgeç diyerek başka yere gidebilir.
+
+*3* Kullanıcı ürün ekledikten sonra düzenleme sayfasına yönlendirme yapılıyor.
+Toast notification görülüp kayboluyor. Kaybolmasın. Toast notification global olarak eklenebiliyor mu ?
+
+*4* Basit ürün filtreleme yapılabilsin.

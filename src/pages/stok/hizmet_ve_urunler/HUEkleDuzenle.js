@@ -53,7 +53,7 @@ export default function HUEkleDuzenle() {
   useEffect(() => {
     if (createData) {
       history.push(
-        `/app/hizmet_ve_urunler/${createData.createProduct.product.id}/detay`
+        `/app/hizmet_ve_urunler/${createData.createProduct.product.id}/duzenle`
       );
       //setData({ ...createData.createProduct.product });
     }

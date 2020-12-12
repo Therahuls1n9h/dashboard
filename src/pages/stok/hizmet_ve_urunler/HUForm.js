@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
@@ -7,13 +7,54 @@ import { CakeIcon, EditIcon, XIcon } from "../../../icons";
 import PageTitle from "../../../components/Typography/PageTitle";
 import { Input, Label, Button } from "@windmill/react-ui";
 
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
+
 export default function HUForm({ formDefaultValues, onSubmit }) {
   const { register, handleSubmit, formState } = useForm({
     defaultValues: formDefaultValues
   });
 
+  // Toast Notification
+  const toastOptions = {
+    autoClose: 3000,
+    closeButton: false,
+    hideProgressBar: true
+  };
+
+  const toastId = React.useRef(null);
+
+  const updateSuccess = () => {
+    toast.dismiss(toastId);
+
+    toastId.current = toast("Kaydedildi!", {
+      ...toastOptions,
+      type: toast.TYPE.SUCCESS
+    });
+  };
+
+  const updateFailure = () => {
+    toast.dismiss(toastId);
+
+    toastId = toast("Hata!!!", {
+      ...toastOptions,
+      type: toast.TYPE.ERROR
+    });
+  };
+
+  useEffect(() => {
+    if (formState.isSubmitted && !toast.isActive(toastId.current)) {
+      if (formState.isSubmitSuccessful) {
+        updateSuccess();
+      } else {
+        updateFailure();
+      }
+    }
+  }, [formState]);
+
   return (
     <>
+      <ToastContainer />
       <PageTitle>
         Hizmet ve Ürünler {">"} {formDefaultValues.id ? "Düzenle" : "Ekle"}
       </PageTitle>

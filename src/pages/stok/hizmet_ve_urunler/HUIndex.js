@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
-import { useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { GET_PRODUCTS } from "../../../queries/ProductQueries";
 
 import PageTitle from "../../../components/Typography/PageTitle";
@@ -22,12 +23,17 @@ import RoundIcon from "../../../components/RoundIcon";
 import InfiniteScroll from "../../../components/InfiniteScroll";
 
 function HUIndex() {
-  const {
-    loading: queryLoading,
-    error: queryError,
-    data: queryData,
-    fetchMore: queryFetchMore
-  } = useQuery(GET_PRODUCTS);
+  const [
+    getProducts,
+    {
+      loading: queryLoading,
+      error: queryError,
+      data: queryData,
+      fetchMore: queryFetchMore
+    }
+  ] = useLazyQuery(GET_PRODUCTS);
+
+  const { register, handleSubmit } = useForm();
 
   const onLoadMore = () => {
     if (queryData && !queryLoading && queryData.products.pageInfo.hasNextPage) {
@@ -40,7 +46,21 @@ function HUIndex() {
     }
   };
 
-  if (queryLoading) return <p>Loading...</p>;
+  const onFilter = (formData) => {
+    if (queryData && !queryLoading) {
+      if (formData?.filter) {
+        getProducts({ variables: { filter: formData.filter } });
+      } else {
+        getProducts();
+      }
+    }
+  };
+
+  useEffect(() => {
+    getProducts();
+  }, []);
+
+  //if (queryLoading) return <p>Loading...</p>;
   if (queryError) return <p>Error :(</p>;
 
   return (
@@ -49,14 +69,23 @@ function HUIndex() {
 
       <div className="mb-4 flex flex-col flex-wrap md:flex-row md:items-center md:justify-between">
         <div className="flex-1 min-w-0">
-          <Label>
-            <div className="relative">
-              <input className="block w-full pl-20 mt-1 text-sm focus:border-purple-400 focus:outline-none focus:shadow-outline-purple form-input" />
-              <button className="absolute inset-y-0 px-4 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-l-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                Filtrele
-              </button>
-            </div>
-          </Label>
+          <form onSubmit={handleSubmit(onFilter)}>
+            <Label>
+              <div className="relative">
+                <input
+                  name="filter"
+                  ref={register}
+                  className="block w-full pl-20 mt-1 text-sm focus:border-purple-400 focus:outline-none focus:shadow-outline-purple form-input"
+                />
+                <button
+                  className="absolute inset-y-0 px-4 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-l-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                  onClick={handleSubmit(onFilter)}
+                >
+                  Filtrele
+                </button>
+              </div>
+            </Label>
+          </form>
         </div>
         <div className="flex flex-col md:flex-row">
           <Button
