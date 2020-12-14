@@ -54,3 +54,11 @@ export const UPDATE_PRODUCT = gql`
     }
   }
 `;
+
+export const DELETE_PRODUCT = gql`
+  mutation deleteProduct($input: DeleteProductInput!) {
+    deleteProduct(input: $input) {
+      message
+    }
+  }
+`;

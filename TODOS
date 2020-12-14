@@ -9,4 +9,8 @@ veya vazgeç diyerek başka yere gidebilir.
 *3* Kullanıcı ürün ekledikten sonra düzenleme sayfasına yönlendirme yapılıyor.
 Toast notification görülüp kayboluyor. Kaybolmasın. Toast notification global olarak eklenebiliyor mu ?
 
-*4* Basit ürün filtreleme yapılabilsin.
+**4* Basit ürün filtreleme yapılabilsin.
+
+*5* Filtrelemede küçük/büyük harf duyarlılığı kaldırılsın.
+
+MOVE TO taiga.io :)

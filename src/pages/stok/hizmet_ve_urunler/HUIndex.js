@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
-import { useLazyQuery } from "@apollo/client";
-import { GET_PRODUCTS } from "../../../queries/ProductQueries";
+import { useLazyQuery, useMutation } from "@apollo/client";
+import { GET_PRODUCTS, DELETE_PRODUCT } from "../../../queries/ProductQueries";
 
 import PageTitle from "../../../components/Typography/PageTitle";
 import {
@@ -21,8 +21,13 @@ import { CakeIcon, EditIcon, TrashIcon } from "../../../icons";
 
 import RoundIcon from "../../../components/RoundIcon";
 import InfiniteScroll from "../../../components/InfiniteScroll";
+import ConfirmModal from "../../../components/ConfirmModal";
 
 function HUIndex() {
+  // Register form
+  const { register, handleSubmit, getValues } = useForm();
+
+  // Get products
   const [
     getProducts,
     {
@@ -33,7 +38,15 @@ function HUIndex() {
     }
   ] = useLazyQuery(GET_PRODUCTS);
 
-  const { register, handleSubmit } = useForm();
+  // Delete product
+  const [
+    deleteProduct,
+    { loading: deleteLoading, error: deleteError, data: deleteData }
+  ] = useMutation(DELETE_PRODUCT, {
+    onCompleted() {
+      onFilter({ filter: getValues("filter") });
+    }
+  });
 
   const onLoadMore = () => {
     if (queryData && !queryLoading && queryData.products.pageInfo.hasNextPage) {
@@ -56,6 +69,34 @@ function HUIndex() {
     }
   };
 
+  const [modalProps, setModalProps] = useState({
+    isOpen: false,
+    title: "",
+    message: "Silmek istediğinize emin misiniz ?"
+  });
+  const onDelete = (productId) => {
+    setModalProps((prev) => ({
+      ...prev,
+      isOpen: true,
+      onOk: () => {
+        deleteProduct({
+          variables: { input: { id: productId } }
+        });
+
+        setModalProps((prev) => ({
+          ...prev,
+          isOpen: false
+        }));
+      },
+      onCancel: () => {
+        setModalProps((prev) => ({
+          ...prev,
+          isOpen: false
+        }));
+      }
+    }));
+  };
+
   useEffect(() => {
     getProducts();
   }, []);
@@ -65,6 +106,7 @@ function HUIndex() {
 
   return (
     <>
+      <ConfirmModal {...modalProps} />
       <PageTitle>Hizmet ve Ürünler</PageTitle>
 
       <div className="mb-4 flex flex-col flex-wrap md:flex-row md:items-center md:justify-between">
@@ -132,10 +174,23 @@ function HUIndex() {
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center space-x-4">
-                    <Button layout="link" size="icon" aria-label="Edit">
+                    <Button
+                      tag={Link}
+                      to={`/app/hizmet_ve_urunler/${node.id}/duzenle`}
+                      layout="link"
+                      size="icon"
+                      aria-label="Edit"
+                    >
                       <EditIcon className="w-5 h-5" aria-hidden="true" />
                     </Button>
-                    <Button layout="link" size="icon" aria-label="Delete">
+                    <Button
+                      onClick={() => {
+                        onDelete(node.id);
+                      }}
+                      layout="link"
+                      size="icon"
+                      aria-label="Delete"
+                    >
                       <TrashIcon className="w-5 h-5" aria-hidden="true" />
                     </Button>
                   </div>
