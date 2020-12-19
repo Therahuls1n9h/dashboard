@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 import { useLazyQuery, useMutation } from "@apollo/client";
-import { GET_PRODUCTS, DELETE_PRODUCT } from "../../../queries/ProductQueries";
+import { GET_STORES, DELETE_STORE } from "../../../queries/StoreQueries";
 
 import PageTitle from "../../../components/Typography/PageTitle";
 import {
@@ -23,36 +23,36 @@ import RoundIcon from "../../../components/RoundIcon";
 import InfiniteScroll from "../../../components/InfiniteScroll";
 import ConfirmModal from "../../../components/ConfirmModal";
 
-function HUIndex() {
+export default function DepoIndex() {
   // Register form
   const { register, handleSubmit, getValues } = useForm();
 
-  // Get products
+  // Get store
   const [
-    getProducts,
+    getStores,
     {
       loading: queryLoading,
       error: queryError,
       data: queryData,
       fetchMore: queryFetchMore
     }
-  ] = useLazyQuery(GET_PRODUCTS);
+  ] = useLazyQuery(GET_STORES);
 
-  // Delete product
+  // Delete store
   const [
-    deleteProduct,
+    deleteStore,
     { loading: deleteLoading, error: deleteError, data: deleteData }
-  ] = useMutation(DELETE_PRODUCT, {
+  ] = useMutation(DELETE_STORE, {
     onCompleted() {
       onFilter({ filter: getValues("filter") });
     }
   });
 
   const onLoadMore = () => {
-    if (queryData && !queryLoading && queryData.products.pageInfo.hasNextPage) {
+    if (queryData && !queryLoading && queryData.stores.pageInfo.hasNextPage) {
       queryFetchMore({
         variables: {
-          after: queryData.products.pageInfo.endCursor,
+          after: queryData.stores.pageInfo.endCursor,
           first: 5
         }
       });
@@ -62,9 +62,9 @@ function HUIndex() {
   const onFilter = (formData) => {
     if (queryData && !queryLoading) {
       if (formData?.filter) {
-        getProducts({ variables: { filter: formData.filter } });
+        getStores({ variables: { filter: formData.filter } });
       } else {
-        getProducts();
+        getStores();
       }
     }
   };
@@ -75,13 +75,13 @@ function HUIndex() {
     message: "Silmek istediğinize emin misiniz ?"
   });
 
-  const onDelete = (productId) => {
+  const onDelete = (storeId) => {
     setModalProps((prev) => ({
       ...prev,
       isOpen: true,
       onOk: () => {
-        deleteProduct({
-          variables: { input: { id: productId } }
+        deleteStore({
+          variables: { input: { id: storeId } }
         });
 
         setModalProps((prev) => ({
@@ -99,7 +99,7 @@ function HUIndex() {
   };
 
   useEffect(() => {
-    getProducts();
+    getStores();
   }, []);
 
   //if (queryLoading) return <p>Loading...</p>;
@@ -108,7 +108,7 @@ function HUIndex() {
   return (
     <>
       <ConfirmModal {...modalProps} />
-      <PageTitle>Hizmet ve Ürünler</PageTitle>
+      <PageTitle>Depo</PageTitle>
 
       <div className="mb-4 flex flex-col flex-wrap md:flex-row md:items-center md:justify-between">
         <div className="flex-1 min-w-0">
@@ -134,9 +134,9 @@ function HUIndex() {
           <Button
             className="ml-0 md:ml-4 mt-4 md:mt-0"
             tag={Link}
-            to="/app/hizmet_ve_urunler/ekle"
+            to="/app/depo/ekle"
           >
-            Hizmet / Ürün Ekle
+            Depo Ekle
           </Button>
         </div>
       </div>
@@ -145,13 +145,12 @@ function HUIndex() {
         <Table>
           <TableHeader>
             <tr>
-              <TableCell>Hizmet/Ürün</TableCell>
-              <TableCell>SKU</TableCell>
+              <TableCell>Depo</TableCell>
               <TableCell>Düzenle/Sil</TableCell>
             </tr>
           </TableHeader>
           <TableBody>
-            {queryData?.products?.edges?.map(({ cursor, node }) => (
+            {queryData?.stores?.edges?.map(({ cursor, node }) => (
               <TableRow key={node.id}>
                 <TableCell>
                   <div className="flex items-center text-sm">
@@ -163,7 +162,7 @@ function HUIndex() {
                     <div>
                       <Link
                         className="ml-3 font-semibold"
-                        to={`/app/hizmet_ve_urunler/${node.id}/detay`}
+                        to={`/app/depo/${node.id}/detay`}
                       >
                         {node.name}
                       </Link>
@@ -177,7 +176,7 @@ function HUIndex() {
                   <div className="flex items-center space-x-4">
                     <Button
                       tag={Link}
-                      to={`/app/hizmet_ve_urunler/${node.id}/duzenle`}
+                      to={`/app/depo/${node.id}/duzenle`}
                       layout="link"
                       size="icon"
                       aria-label="Edit"
@@ -203,12 +202,10 @@ function HUIndex() {
         <TableFooter>
           <InfiniteScroll
             loadMore={onLoadMore}
-            hasMore={queryData?.products?.pageInfo?.hasNextPage}
+            hasMore={queryData?.stores?.pageInfo?.hasNextPage}
           />
         </TableFooter>
       </TableContainer>
     </>
   );
 }
-
-export default HUIndex;

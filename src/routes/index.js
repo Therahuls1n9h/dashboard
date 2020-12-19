@@ -10,10 +10,18 @@ const Modals = lazy(() => import("../pages/Modals"));
 const Tables = lazy(() => import("../pages/Tables"));
 const Page404 = lazy(() => import("../pages/404"));
 const Blank = lazy(() => import("../pages/Blank"));
+// Stock pages
+// Hizmet ve Ürünler pages
 const HUIndex = lazy(() => import("../pages/stok/hizmet_ve_urunler/HUIndex"));
 const HUDetay = lazy(() => import("../pages/stok/hizmet_ve_urunler/HUDetay"));
 const HUEkleDuzenle = lazy(() =>
   import("../pages/stok/hizmet_ve_urunler/HUEkleDuzenle")
+);
+// Depo pages
+const DepoIndex = lazy(() => import("../pages/stok/depo/DepoIndex"));
+const DepoDetay = lazy(() => import("../pages/stok/depo/DepoDetay"));
+const DepoEkleDuzenle = lazy(() =>
+  import("../pages/stok/depo/DepoEkleDüzenle")
 );
 
 /**
@@ -78,6 +86,22 @@ const routes = [
   {
     path: "/hizmet_ve_urunler/:id/duzenle",
     component: HUEkleDuzenle
+  },
+  {
+    path: "/depo",
+    component: DepoIndex
+  },
+  {
+    path: "/depo/:id/detay",
+    component: DepoDetay
+  },
+  {
+    path: "/depo/ekle",
+    component: DepoEkleDuzenle
+  },
+  {
+    path: "/depo/:id/duzenle",
+    component: DepoEkleDuzenle
   }
 ];
 

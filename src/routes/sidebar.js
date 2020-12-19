@@ -18,6 +18,10 @@ const routes = [
       {
         path: "/app/hizmet_ve_urunler",
         name: "Hizmet ve Ürünler"
+      },
+      {
+        path: "/app/depo",
+        name: "Depo"
       }
     ]
   }

@@ -26,7 +26,8 @@ const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
-        products: relayStylePagination()
+        products: relayStylePagination(),
+        stores: relayStylePagination()
       }
     }
   }

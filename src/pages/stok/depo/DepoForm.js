@@ -5,12 +5,12 @@ import { useForm } from "react-hook-form";
 import RoundIcon from "../../../components/RoundIcon";
 import { CakeIcon, EditIcon, XIcon } from "../../../icons";
 import PageTitle from "../../../components/Typography/PageTitle";
-import { Input, Label, Button } from "@windmill/react-ui";
+import { Input, Button } from "@windmill/react-ui";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 
-export default function HUForm({ formDefaultValues, onSubmit }) {
+export default function DepoForm({ formDefaultValues, onSubmit }) {
   const { register, handleSubmit, formState } = useForm({
     defaultValues: formDefaultValues
   });
@@ -56,7 +56,7 @@ export default function HUForm({ formDefaultValues, onSubmit }) {
     <>
       <ToastContainer />
       <PageTitle>
-        Hizmet ve Ürünler {">"} {formDefaultValues.id ? "Düzenle" : "Ekle"}
+        Depo {">"} {formDefaultValues.id ? "Düzenle" : "Ekle"}
       </PageTitle>
 
       <div className="px-4 py-3 mb-8 bg-white rounded-lg shadow-md">
@@ -71,7 +71,7 @@ export default function HUForm({ formDefaultValues, onSubmit }) {
               <Input
                 name="name"
                 className="my-auto ml-3 text-xl font-medium text-gray-700"
-                placeholder="Ürün Adı"
+                placeholder="Depo Adı"
                 ref={register}
                 defaultValue={formDefaultValues.name}
               />
@@ -85,10 +85,8 @@ export default function HUForm({ formDefaultValues, onSubmit }) {
                 tag={Link}
                 to={
                   formDefaultValues.id
-                    ? "/app/hizmet_ve_urunler/" +
-                      formDefaultValues.id +
-                      "/detay"
-                    : "/app/hizmet_ve_urunler"
+                    ? "/app/depo/" + formDefaultValues.id + "/detay"
+                    : "/app/depo"
                 }
               >
                 Vazgeç
@@ -105,17 +103,6 @@ export default function HUForm({ formDefaultValues, onSubmit }) {
             </div>
           </div>
           <hr className="my-3" />
-          <div className="my-1 flex flex-col">
-            <Label>
-              <span>SKU</span>
-              <Input
-                name="sku"
-                className="mt-1"
-                ref={register}
-                defaultValue={formDefaultValues.sku}
-              />
-            </Label>
-          </div>
         </form>
       </div>
     </>
