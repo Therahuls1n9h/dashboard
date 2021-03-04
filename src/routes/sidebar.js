@@ -21,7 +21,11 @@ const routes = [
       },
       {
         path: "/app/depo",
-        name: "Depo"
+        name: "Depolar"
+      },
+      {
+        path: "/app/siparis",
+        name: "Sipariş"
       }
     ]
   }

@@ -23,6 +23,8 @@ const DepoDetay = lazy(() => import("../pages/stok/depo/DepoDetay"));
 const DepoEkleDuzenle = lazy(() =>
   import("../pages/stok/depo/DepoEkleDüzenle")
 );
+// Sipariş pages
+const SiparisIndex = lazy(() => import("../pages/stok/siparis/SiparisIndex"));
 
 /**
  * ⚠ These are internal routes!
@@ -102,6 +104,10 @@ const routes = [
   {
     path: "/depo/:id/duzenle",
     component: DepoEkleDuzenle
+  },
+  {
+    path: "/siparis",
+    component: SiparisIndex
   }
 ];
 

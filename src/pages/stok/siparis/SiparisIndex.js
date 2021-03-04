@@ -3,7 +3,10 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 import { useLazyQuery, useMutation } from "@apollo/client";
-import { GET_STORES, DELETE_STORE } from "../../../queries/StoreQueries";
+import {
+  GET_INBOUNDORDERS,
+  DELETE_INBOUNDORDER
+} from "../../../queries/OrderQueries";
 
 import PageTitle from "../../../components/Typography/PageTitle";
 import {
@@ -23,36 +26,40 @@ import RoundIcon from "../../../components/RoundIcon";
 import InfiniteScroll from "../../../components/InfiniteScroll";
 import ConfirmModal from "../../../components/ConfirmModal";
 
-export default function DepoIndex() {
+function SiparisIndex() {
   // Register form
   const { register, handleSubmit, getValues } = useForm();
 
-  // Get store
+  // Get inbound orders
   const [
-    getStores,
+    getInboundOrders,
     {
       loading: queryLoading,
       error: queryError,
       data: queryData,
       fetchMore: queryFetchMore
     }
-  ] = useLazyQuery(GET_STORES);
+  ] = useLazyQuery(GET_INBOUNDORDERS);
 
-  // Delete store
+  // Delete inbound order
   const [
-    deleteStore,
+    deleteInboundOrder,
     { loading: deleteLoading, error: deleteError, data: deleteData }
-  ] = useMutation(DELETE_STORE, {
+  ] = useMutation(DELETE_INBOUNDORDER, {
     onCompleted() {
       onFilter({ filter: getValues("filter") });
     }
   });
 
   const onLoadMore = () => {
-    if (queryData && !queryLoading && queryData.stores.pageInfo.hasNextPage) {
+    if (
+      queryData &&
+      !queryLoading &&
+      queryData.inboundOrders.pageInfo.hasNextPage
+    ) {
       queryFetchMore({
         variables: {
-          after: queryData.stores.pageInfo.endCursor,
+          after: queryData.inboundOrders.pageInfo.endCursor,
           first: 5
         }
       });
@@ -62,9 +69,9 @@ export default function DepoIndex() {
   const onFilter = (formData) => {
     if (queryData && !queryLoading) {
       if (formData?.filter) {
-        getStores({ variables: { filter: formData.filter } });
+        getInboundOrders({ variables: { filter: formData.filter } });
       } else {
-        getStores();
+        getInboundOrders();
       }
     }
   };
@@ -75,13 +82,13 @@ export default function DepoIndex() {
     message: "Silmek istediğinize emin misiniz ?"
   });
 
-  const onDelete = (storeId) => {
+  const onDelete = (inboundOrderId) => {
     setModalProps((prev) => ({
       ...prev,
       isOpen: true,
       onOk: () => {
-        deleteStore({
-          variables: { input: { id: storeId } }
+        deleteInboundOrder({
+          variables: { input: { id: inboundOrderId } }
         });
 
         setModalProps((prev) => ({
@@ -99,7 +106,7 @@ export default function DepoIndex() {
   };
 
   useEffect(() => {
-    getStores();
+    getInboundOrders();
   }, []);
 
   //if (queryLoading) return <p>Loading...</p>;
@@ -108,7 +115,7 @@ export default function DepoIndex() {
   return (
     <>
       <ConfirmModal {...modalProps} />
-      <PageTitle>Depolar</PageTitle>
+      <PageTitle>Siparişler</PageTitle>
 
       <div className="mb-4 flex flex-col flex-wrap md:flex-row md:items-center md:justify-between">
         <div className="flex-1 min-w-0">
@@ -134,9 +141,9 @@ export default function DepoIndex() {
           <Button
             className="ml-0 md:ml-4 mt-4 md:mt-0"
             tag={Link}
-            to="/app/depo/ekle"
+            to="/app/siparis/ekle"
           >
-            Depo Ekle
+            Sipariş
           </Button>
         </div>
       </div>
@@ -145,12 +152,13 @@ export default function DepoIndex() {
         <Table>
           <TableHeader>
             <tr>
-              <TableCell>Depo</TableCell>
+              <TableCell>Sipariş Tarihi</TableCell>
+              <TableCell>Not</TableCell>
               <TableCell>Düzenle/Sil</TableCell>
             </tr>
           </TableHeader>
           <TableBody>
-            {queryData?.stores?.edges?.map(({ cursor, node }) => (
+            {queryData?.inboundOrders?.edges?.map(({ cursor, node }) => (
               <TableRow key={node.id}>
                 <TableCell>
                   <div className="flex items-center text-sm">
@@ -162,21 +170,21 @@ export default function DepoIndex() {
                     <div>
                       <Link
                         className="ml-3 font-semibold"
-                        to={`/app/depo/${node.id}/detay`}
+                        to={`/app/siparis/${node.id}/detay`}
                       >
-                        {node.name}
+                        {node.date}
                       </Link>
                     </div>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <span className="text-sm">{node.sku}</span>
+                  <span className="text-sm">{node.note}</span>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center space-x-4">
                     <Button
                       tag={Link}
-                      to={`/app/depo/${node.id}/duzenle`}
+                      to={`/app/siparis/${node.id}/duzenle`}
                       layout="link"
                       size="icon"
                       aria-label="Edit"
@@ -202,10 +210,12 @@ export default function DepoIndex() {
         <TableFooter>
           <InfiniteScroll
             loadMore={onLoadMore}
-            hasMore={queryData?.stores?.pageInfo?.hasNextPage}
+            hasMore={queryData?.products?.pageInfo?.hasNextPage}
           />
         </TableFooter>
       </TableContainer>
     </>
   );
 }
+
+export default SiparisIndex;
