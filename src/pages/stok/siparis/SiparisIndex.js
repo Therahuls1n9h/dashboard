@@ -143,7 +143,7 @@ function SiparisIndex() {
             tag={Link}
             to="/app/siparis/ekle"
           >
-            Sipariş
+            Sipariş Ekle
           </Button>
         </div>
       </div>

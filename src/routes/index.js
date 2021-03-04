@@ -25,6 +25,10 @@ const DepoEkleDuzenle = lazy(() =>
 );
 // Sipariş pages
 const SiparisIndex = lazy(() => import("../pages/stok/siparis/SiparisIndex"));
+const SiparisDetay = lazy(() => import("../pages/stok/siparis/SiparisDetay"));
+const SiparisEkleDuzenle = lazy(() =>
+  import("../pages/stok/siparis/SiparisEkleDuzenle")
+);
 
 /**
  * ⚠ These are internal routes!
@@ -108,6 +112,18 @@ const routes = [
   {
     path: "/siparis",
     component: SiparisIndex
+  },
+  {
+    path: "/siparis/:id/detay",
+    component: SiparisDetay
+  },
+  {
+    path: "/siparis/ekle",
+    component: SiparisEkleDuzenle
+  },
+  {
+    path: "/siparis/:id/duzenle",
+    component: SiparisEkleDuzenle
   }
 ];
 
