@@ -210,7 +210,7 @@ function SiparisIndex() {
         <TableFooter>
           <InfiniteScroll
             loadMore={onLoadMore}
-            hasMore={queryData?.products?.pageInfo?.hasNextPage}
+            hasMore={queryData?.inboundOrders?.pageInfo?.hasNextPage}
           />
         </TableFooter>
       </TableContainer>

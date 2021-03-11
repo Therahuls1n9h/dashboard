@@ -29,6 +29,8 @@ import { ReactComponent as OutlineLogoutIcon } from "./outlineLogout.svg";
 import { ReactComponent as CakeIcon } from "./cake.svg";
 import { ReactComponent as XIcon } from "./x.svg";
 import { ReactComponent as RefreshIcon } from "./refresh.svg";
+import { ReactComponent as RewindIcon } from "./rewind.svg";
+import { ReactComponent as CheckIcon } from "./check.svg";
 
 export {
   ButtonsIcon,
@@ -61,5 +63,7 @@ export {
   OutlineLogoutIcon,
   CakeIcon,
   XIcon,
-  RefreshIcon
+  RefreshIcon,
+  RewindIcon,
+  CheckIcon
 };

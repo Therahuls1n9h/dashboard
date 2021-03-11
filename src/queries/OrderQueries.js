@@ -111,3 +111,35 @@ export const DELETE_INBOUNDORDER = gql`
     }
   }
 `;
+
+export const CREATE_ORDERITEM = gql`
+  mutation createOrderItem($input: CreateOrderItemInput!) {
+    createOrderItem(input: $input) {
+      orderItem {
+        id
+        product {
+          id
+          name
+          sku
+        }
+        quantity
+        unitPrice
+      }
+    }
+  }
+`;
+
+export const UPDATE_ORDERITEM = gql`
+  mutation updateOrderItem($input: UpdateOrderItemInput!) {
+    updateOrderItem(input: $input) {
+      orderItem {
+        id
+        product {
+          id
+        }
+        quantity
+        unitPrice
+      }
+    }
+  }
+`;

@@ -4,7 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { Button } from "@windmill/react-ui";
 
 import RoundIcon from "../../../components/RoundIcon";
-import { CakeIcon, EditIcon } from "../../../icons";
+import { CakeIcon, EditIcon, RewindIcon } from "../../../icons";
 import PageTitle from "../../../components/Typography/PageTitle";
 import { useQuery } from "@apollo/client";
 import { GET_STORE } from "../../../queries/StoreQueries";
@@ -36,6 +36,18 @@ export default function DepoDetay() {
             <h2 className="my-auto mx-3 text-xl font-medium text-gray-700">
               {data.store.name}
             </h2>
+          </div>
+
+          <div className="flex flex-col md:flex-row">
+            <Button
+              block
+              className="ml-0 md:ml-4 mt-4 md:mt-0"
+              iconLeft={RewindIcon}
+              tag={Link}
+              to={`/app/depo/`}
+            >
+              Geri
+            </Button>
           </div>
           <div className="flex flex-col md:flex-row">
             <Button

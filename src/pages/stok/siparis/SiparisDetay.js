@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Link, useParams } from "react-router-dom";
 
 import {
@@ -8,15 +8,16 @@ import {
   TableBody,
   TableRow,
   TableContainer,
-  TableFooter,
   Button
 } from "@windmill/react-ui";
 
 import RoundIcon from "../../../components/RoundIcon";
-import { CakeIcon, EditIcon, TrashIcon } from "../../../icons";
+import { CakeIcon, EditIcon, TrashIcon, RewindIcon } from "../../../icons";
 import PageTitle from "../../../components/Typography/PageTitle";
 import { useQuery } from "@apollo/client";
 import { GET_INBOUNDORDER_WITH_ITEM } from "../../../queries/OrderQueries";
+
+import SiparisKalemiDetay from "./siparis_kalemi/SiparisKalemiDetay";
 
 export default function SiparisDetay() {
   // Params from uri
@@ -54,6 +55,17 @@ export default function SiparisDetay() {
             <Button
               block
               className="ml-0 md:ml-4 mt-4 md:mt-0"
+              iconLeft={RewindIcon}
+              tag={Link}
+              to={`/app/siparis/`}
+            >
+              Geri
+            </Button>
+          </div>
+          <div className="flex flex-col md:flex-row">
+            <Button
+              block
+              className="ml-0 md:ml-4 mt-4 md:mt-0"
               iconLeft={EditIcon}
               tag={Link}
               to={`/app/siparis/${id}/duzenle`}
@@ -76,46 +88,7 @@ export default function SiparisDetay() {
         </div>
       </div>
 
-      <TableContainer className="mb-8">
-        <Table>
-          <TableHeader>
-            <tr>
-              <TableCell>Ürün</TableCell>
-              <TableCell>Adet</TableCell>
-              <TableCell>Tutar</TableCell>
-              <TableCell>Düzenle/Sil</TableCell>
-            </tr>
-          </TableHeader>
-          <TableBody>
-            {queryData?.inboundOrder?.items.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell>
-                  <div className="flex items-center text-sm">{item.product.name}</div>
-                </TableCell>
-                <TableCell>
-                  <span className="text-sm">{item.quantity}</span>
-                </TableCell>
-                <TableCell>
-                  <span className="text-sm">{item.unitPrice * item.quantity}</span>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center space-x-4">
-                    <Button
-                      tag={Link}
-                      to={`/app/siparis/${item.id}/duzenle`}
-                      layout="link"
-                      size="icon"
-                      aria-label="Edit"
-                    >
-                      <EditIcon className="w-5 h-5" aria-hidden="true" />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <SiparisKalemiDetay inboundOrder={queryData.inboundOrder} />
     </>
   );
 }
