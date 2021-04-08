@@ -73,6 +73,24 @@ export default function SiparisDetay() {
               Düzenle
             </Button>
           </div>
+          <div className="flex flex-col md:flex-row">
+            <a
+              target="_blank"
+              href={`https://sup-boot.herokuapp.com/files/order/${id}`}
+            >
+              EXCEL
+            </a>
+
+            <Button
+              block
+              className="ml-0 md:ml-4 mt-4 md:mt-0"
+              iconLeft={EditIcon}
+              tag={Link}
+              to={`https://sup-boot.herokuapp.com/files/order/${id}`}
+            >
+              EXCELL
+            </Button>
+          </div>
         </div>
         <hr className="my-3" />
         <div className="my-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap">
@@ -83,7 +101,7 @@ export default function SiparisDetay() {
         <hr className="my-3" />
         <div className="my-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap">
           <div className="items-center text-sm text-gray-500 leading-5 mr-6">
-            Toplam : 555 TL
+            Toplam : {queryData.inboundOrder.totalPrice} TL
           </div>
         </div>
       </div>

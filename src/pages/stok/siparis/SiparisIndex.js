@@ -154,6 +154,7 @@ function SiparisIndex() {
             <tr>
               <TableCell>Sipariş Tarihi</TableCell>
               <TableCell>Not</TableCell>
+              <TableCell>Toplam</TableCell>
               <TableCell>Düzenle/Sil</TableCell>
             </tr>
           </TableHeader>
@@ -179,6 +180,9 @@ function SiparisIndex() {
                 </TableCell>
                 <TableCell>
                   <span className="text-sm">{node.note}</span>
+                </TableCell>
+                <TableCell>
+                  <span className="text-sm">{node.totalPrice}</span>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center space-x-4">

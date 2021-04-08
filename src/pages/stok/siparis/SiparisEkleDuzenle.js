@@ -51,7 +51,7 @@ export default function SiparisEkleDuzenle() {
   useEffect(() => {
     if (createData) {
       history.push(
-        `/app/siparis/${createData.createInboundOrder.inboundOrder.id}/duzenle`
+        `/app/siparis/${createData.createInboundOrder.inboundOrder.id}/detay`
       );
       //setData({ ...createData.createProduct.product });
     }

@@ -9,6 +9,7 @@ export const GET_PRODUCTS = gql`
           id
           name
           sku
+          lastPrice
         }
       }
       pageInfo {
@@ -27,6 +28,7 @@ export const GET_PRODUCT = gql`
       id
       name
       sku
+      lastPrice
     }
   }
 `;
@@ -38,6 +40,7 @@ export const CREATE_PRODUCT = gql`
         id
         name
         sku
+        lastPrice
       }
     }
   }
@@ -50,6 +53,7 @@ export const UPDATE_PRODUCT = gql`
         id
         name
         sku
+        lastPrice
       }
     }
   }

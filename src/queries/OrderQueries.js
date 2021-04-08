@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const GET_INBOUNDORDERS = gql`
-  query getInboundOrders($filter: String, $first: Int, $after: ID) {
+  query getInboundOrders($filter: String, $first: Int, $after: String) {
     inboundOrders(filter: $filter, first: $first, after: $after) {
       edges {
         cursor
@@ -9,6 +9,7 @@ export const GET_INBOUNDORDERS = gql`
           id
           date
           note
+          totalPrice
         }
       }
       pageInfo {
@@ -22,7 +23,7 @@ export const GET_INBOUNDORDERS = gql`
 `;
 
 export const GET_INBOUNDORDERS_WITH_ITEMS = gql`
-  query getInboundOrdersWithItems($filter: String, $first: Int, $after: ID) {
+  query getInboundOrdersWithItems($filter: String, $first: Int, $after: String) {
     inboundOrders(filter: $filter, first: $first, after: $after) {
       edges {
         cursor
@@ -30,6 +31,7 @@ export const GET_INBOUNDORDERS_WITH_ITEMS = gql`
           id
           date
           note
+          totalPrice
           items {
             id
             product {
@@ -56,6 +58,7 @@ export const GET_INBOUNDORDER = gql`
       id
       date
       note
+      totalPrice
     }
   }
 `;
@@ -66,6 +69,7 @@ export const GET_INBOUNDORDER_WITH_ITEM = gql`
       id
       date
       note
+      totalPrice
       items {
         id
         product {
@@ -87,6 +91,7 @@ export const CREATE_INBOUNDORDER = gql`
         id
         date
         note
+        totalPrice
       }
     }
   }
@@ -99,6 +104,7 @@ export const UPDATE_INBOUNDORDER = gql`
         id
         date
         note
+        totalPrice
       }
     }
   }
